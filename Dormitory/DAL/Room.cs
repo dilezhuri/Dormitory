@@ -17,5 +17,6 @@ namespace Dormitory.DAL
 
         public virtual Dormitory Dormitory { get; set; } = null!;
         public virtual ICollection<RoomStudent> RoomStudents { get; set; }
+        public virtual ICollection<Announcemnt> Announcemnts { get; set;}
     }
 }

@@ -40,11 +40,17 @@ namespace Dormitory.DAL
                     .ValueGeneratedNever()
                     .HasColumnName("ID");
 
-                entity.Property(e => e.Decpription).HasMaxLength(50);
+                entity.Property(e => e.Description).HasMaxLength(50);
 
                 entity.Property(e => e.Published).HasColumnType("datetime");
 
                 entity.Property(e => e.Title).HasMaxLength(50);
+
+                entity.HasOne(d => d.Room)
+                   .WithMany(p => p.Announcemnts)
+                   .HasForeignKey(d => d.RoomId)
+                   .OnDelete(DeleteBehavior.ClientSetNull)
+                   .HasConstraintName("FK_Rooms_Announcments");
             });
 
             modelBuilder.Entity<Application>(entity =>

@@ -4,6 +4,7 @@ using Dormitory.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Dormitory.Migrations
 {
     [DbContext(typeof(DormitoryContext))]
-    partial class DormitoryContextModelSnapshot : ModelSnapshot
+    [Migration("20230506101340_AddRoomAnnouncment")]
+    partial class AddRoomAnnouncment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
