@@ -60,6 +60,16 @@ namespace Dormitory.BLL
                 _ = Console.ReadLine();
                 return;
             }
+            // Check if student has other  activeaplication
+            var applicationExists = context.Applications
+            .Any(x => x.AnnouncementId == announcementId && x.StudentId == studentId && x.IsActive == true);
+
+            if (applicationExists)
+            {
+                Console.WriteLine($"Student {studentId}, already has an active application for announcement {announcementId}!");
+                return;
+            }
+
             // Create application
             var application = new Application
             {
@@ -81,52 +91,80 @@ namespace Dormitory.BLL
             using var context = new DormitoryContext();
             // Get all active applications
 
-            var existingApplications = context.Applications
-                .Include(x => x.Student)
-                .Include(x => x.Announcement)
-                .ThenInclude(x=>x.Room)
-                .Where(x => x.IsActive == true)
-                .ToList();
-            //  Show all applications to user
-            Console.WriteLine("List of active aplication");
-            foreach(var application in existingApplications)
+            var applications = context.Applications
+            .Include(x => x.Announcement)
+                .ThenInclude(x => x.Room)
+            .Include(x => x.Student)
+            .Where(x => x.IsActive == true)
+            .ToList();
+
+            // TODO: Get application Id
+            // TODO: Check if application exists
+            // Show all applications to user
+            Console.WriteLine("List of applications:");
+            foreach (var application in applications)
             {
-                Console.WriteLine($"ApplicationID: {application.Id}, Announcemnt: {application.Announcement.Id}"+
-                    $"studentID: {application.StudentId}, sudentName: {application.Student.Name}, RoomID:{application.Announcement.RoomId},RoomName:{application.Announcement.Room.Name}");
+                Console.WriteLine($"Id: {application.Id}, Announcement: {application.Announcement.Title}, " +
+                                   $"Student Id: {application.StudentId}, Student: {application.Student.Name} {application.Student.Surname}, " +
+                                   $"Room Id: {application.Announcement.RoomId}, Room Name: {application.Announcement.Room.Name}");
             }
 
-            //  Get application Id
-            Console.WriteLine("Enter aplication Id:");
+            // Get application Id
+            Console.WriteLine("Give me application Id:");
             _ = int.TryParse(Console.ReadLine(), out var applicationId);
+
             // Check if application exists
-            var applicationExists = existingApplications.FirstOrDefault(application => application.Id == applicationId);
-            if (applicationExists==null)
+            var applicationToApprove = applications.FirstOrDefault(application => application.Id == applicationId);
+
+            // TODO: Get student id from application
+            // TODO: Get room id from application
+            // TODO: Add to RoomStudent
+            if (applicationToApprove == null)
             {
-                Console.WriteLine($"Aplication {applicationId}, does not exist!");
-                _ = Console.ReadLine();
+                Console.WriteLine($"Application {applicationId}, does not exist!");
                 return;
             }
 
-            // TODO: Get student id from application
-
-            var studentId=AplicationManagment.StudentId;
-
-
-            // TODO: Get room id from application
-            var roomId=AplicationManagment.Announcement.RoomId;
-
-            // TODO: Add to RoomStudent
-            _=context.RoomStudents.Add(new RoomStudent
-                {
-                RoomId=roomId,
-                StudentId=studentId,
-                StartDate=DateTime.Now
-            });
-
-            // TO DO: Set other application, for this room, to inactive
+            // TODO: Set other application, for this room, to inactive
             // TOD: Set this announcement to inactive
+            // Get student id from application
+            var studentId = applicationToApprove.StudentId;
 
             // TODO: Save changes
+            // Get room id from application
+            var roomId = applicationToApprove.Announcement.RoomId;
+
+            // Add to RoomStudent
+            _ = context.RoomStudents.Add(new RoomStudent
+            {
+                RoomId = roomId,
+                StudentId = studentId,
+                StartDate = DateTime.Now
+            });
+
+            // Show message to user that application is approved
+            Console.WriteLine($"Application {applicationId} is approved. And Student {studentId}, is in Room {roomId}");
+
+            // Get all active applications for this announcement
+            var appActiveApplicationsForAnnouncemnt = context.Applications
+                .Where(x => x.IsActive == true && x.AnnouncementId == applicationToApprove.AnnouncementId)
+                .ToList();
+
+            // Set other application, for this room, to inactive
+            foreach (var otherApp in appActiveApplicationsForAnnouncemnt)
+            {
+                // Make application inactive
+                otherApp.IsActive = false;
+            }
+
+            // The other implementation for the above foreach
+            // appActiveApplicationsForAnnouncemnt.ForEach(x => x.IsActive = false);
+
+            // Set this announcement to inactive
+            applicationToApprove.Announcement.IsActive = false;
+
+            // Save changes
+            _ = context.SaveChanges();
         }
 
     }
