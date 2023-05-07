@@ -40,10 +40,10 @@ namespace Dormitory.BLL
                 Console.ReadLine();
                 return;
             }
-            var hasActiveAnnouncmentForRoom = context.Announcemnts
+            var hasActiveAnnouncmentForRoom = context.Announcemnt
                 .Any(x => x.IsActive == true && x.RoomId == roomId);
 
-            _ = context.Announcemnts.Add(new Announcemnt
+            _ = context.Announcemnt.Add(new Announcemnt
             {
                 Title = title,
                 Description = description,
@@ -51,6 +51,7 @@ namespace Dormitory.BLL
                 IsActive = true,
                 RoomId = roomId
             });
+            Console.WriteLine($"Your Announcemet {title} is added");
 
             _ = context.SaveChanges();
         }
@@ -62,7 +63,7 @@ namespace Dormitory.BLL
             //Enter ID of announcemnts
             //Control if announcement exists
             //if exists update with new information, else ..
-            var existingAnnouncements = context.Announcemnts.ToList();
+            var existingAnnouncements = context.Announcemnt.ToList();
             foreach (var announcemnt in existingAnnouncements)
             {
                 Console.WriteLine($"{announcemnt.Id}");

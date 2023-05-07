@@ -16,7 +16,7 @@ namespace Dormitory.DAL
         {
         }
 
-        public virtual DbSet<Announcemnt> Announcemnts { get; set; } = null!;
+        public virtual DbSet<Announcemnt> Announcemnt { get; set; } = null!;
         public virtual DbSet<Application> Applications { get; set; } = null!;
         public virtual DbSet<Dormitory> Dormitories { get; set; } = null!;
         public virtual DbSet<Room> Rooms { get; set; } = null!;
