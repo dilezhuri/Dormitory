@@ -23,10 +23,13 @@ internal class Program
                     AnnouncementManagment.AddAnnouncement();
                     break;
                 case "EA":
-                    //TerminateAnnouncement();
+                    AnnouncementManagment.TerminateAnnouncemnt();
                     break;
-                case "AAPP":
-                    //NewApplication();
+                case "ADAPP":
+                    AplicationManagment.AddAplication();
+                    break;
+                   case "EDAPP":
+                    AplicationManagment.ApproveApplication();
                     break;
                 case "ESC":
                     Console.WriteLine("Bye Bye");

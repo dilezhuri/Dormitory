@@ -118,6 +118,8 @@ namespace Dormitory.BLL
 
             // TODO: Get student id from application
             // TODO: Get room id from application
+            var roomId = applicationToApprove.Announcement.Id;
+
             // TODO: Add to RoomStudent
             if (applicationToApprove == null)
             {
@@ -132,8 +134,17 @@ namespace Dormitory.BLL
 
             // TODO: Save changes
             // Get room id from application
-            var roomId = applicationToApprove.Announcement.RoomId;
+           
 
+            // Check if max number of students is reached for this room
+            var countofStudentsperRoom = context.RoomStudents.Count(x => x.RoomId == applicationToApprove.Announcement.RoomId && x.EndDate != null);
+
+            var maxCapacity = applicationToApprove.Announcement.Room.Capacity;
+            if(countofStudentsperRoom>=maxCapacity)
+            {
+                Console.WriteLine("This room can not accept more students");
+                return;
+            }
             // Add to RoomStudent
             _ = context.RoomStudents.Add(new RoomStudent
             {
